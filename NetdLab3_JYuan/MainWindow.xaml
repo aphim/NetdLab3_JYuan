@@ -13,35 +13,70 @@
             mc:Ignorable="d"
             Title="Navigate the World" Height="350" Width="500">
     <Grid>
-        
-	        <Grid.ColumnDefinitions>
-		        <ColumnDefinition x:Name="gridColumn0" Width="150"/>
-		        <ColumnDefinition x:Name="gridColumn1"/>
-	        </Grid.ColumnDefinitions>
-	    <!-- generate a stackpanel-->
-	    <StackPanel Grid.Column ="0" Margin="25,70,0,75">
-            <!--Label: "Buyer Name" -->
-		    <Label x:Name="lblBuyerName" Content="Buyer Name: " HorizontalAlignment="right" VerticalAlignment="Top"/>
-            <!--Label "# of Shares" -->
-		    <Label x:Name="lblShareNo" Content="# of Shares : " HorizontalAlignment="right" VerticalAlignment="Top"/>
-            <!--Label "date Purchased" -->
-		    <Label x:Name="lblDate" Content="Date Purchased : " HorizontalAlignment="right" VerticalAlignment="Top"/>
-            <!--Label "Share Type" -->
-		    <Label x:Name="lblType" Content="Share Type : " HorizontalAlignment="right" VerticalAlignment="Top"/>
-        </StackPanel>
-	    <StackPanel Grid.Column ="1" Margin="0,75,25,75">
-		    <!--Textbox for buyer name-->
-		    <TextBox x:Name="txtBuyerName" TextWrapping="Wrap" HorizontalAlignment="left" Width="300"/>
-		    <!--Textbox for number of shares-->
-            <TextBox x:Name="txtShareNo"  TextWrapping="Wrap" HorizontalAlignment="left" Margin ="0,8,0,0" Width="300"/>
-		    <!--date picker-->
-            <DatePicker x:Name="dtpDatePicker" Margin="0,5,0,0"/>
-		    <!--radio buttons for common or preferred shares-->
-            <RadioButton x:Name="radCommon" Margin="0,7,0,0" IsChecked="True">Common</RadioButton>
-            <RadioButton x:Name="radPreferred" Margin="0,7,0,0">Preferred</RadioButton>
-		    <!--button to generate entry-->
-            <Button x:Name="btnCreateEntry" Content="Create Entry" Margin="0,20,70,0" Click="btnCreateEntry_Click"/>
-        </StackPanel>
-
+	    <TabControl>
+            <TabItem x:Name="tabCreateEntry" Header="Create Entry">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition x:Name="gridColumn0" Width="150"/>
+                        <ColumnDefinition x:Name="gridColumn1"/>
+                    </Grid.ColumnDefinitions>
+                    <!-- generate a stackpanel-->
+                    <StackPanel Grid.Column ="0" Margin="25,60,0,0">
+                        <!--Label: "Buyer Name" -->
+                        <Label x:Name="lblBuyerName" Content="Buyer Name: " HorizontalAlignment="right" VerticalAlignment="Top"/>
+                        <!--Label "# of Shares" -->
+                        <Label x:Name="lblShareNo" Content="# of Shares : " HorizontalAlignment="right" VerticalAlignment="Top"/>
+                        <!--Label "date Purchased" -->
+                        <Label x:Name="lblDate" Content="Date Purchased : " HorizontalAlignment="right" VerticalAlignment="Top"/>
+                        <!--Label "Share Type" -->
+                        <Label x:Name="lblType" Content="Share Type : " HorizontalAlignment="right" VerticalAlignment="Top"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column ="1" Margin="0,60,25,0">
+                        <!--Textbox for buyer name-->
+                        <TextBox x:Name="txtBuyerName" TextWrapping="Wrap" HorizontalAlignment="left" Width="300"/>
+                        <!--Textbox for number of shares-->
+                        <TextBox x:Name="txtShareNo"  TextWrapping="Wrap" HorizontalAlignment="left" Margin ="0,8,0,0" Width="300"/>
+                        <!--date picker-->
+                        <DatePicker x:Name="dtpDatePicker" Margin="0,5,0,0"/>
+                        <!--radio buttons for common or preferred shares-->
+                        <RadioButton x:Name="radCommon" Margin="0,7,0,0" IsChecked="True">Common</RadioButton>
+                        <RadioButton x:Name="radPreferred" Margin="0,7,0,0">Preferred</RadioButton>
+                        <!--button to generate entry-->
+                        <Button x:Name="btnCreateEntry" Content="Create Entry" Margin="0,20,70,0" Click="btnCreateEntry_Click"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="tabViewSummary" Header="View Summary">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition x:Name="gridColumn2" Width="200"/>
+                        <ColumnDefinition x:Name="gridColumn3"/>
+                    </Grid.ColumnDefinitions>
+	                <StackPanel Grid.Column ="0" Margin="25,70,0,0">
+		                <Label x:Name="lblCommonSold" Content="# of Common Shares Sold : " HorizontalAlignment="right" VerticalAlignment="Top"/>
+		                <Label x:Name="lblPreferredSold" Content="# of Preferred Shares Sold : " HorizontalAlignment="right" VerticalAlignment="Top"/>
+		                <Label x:Name="lblRevenue" Content="Revenue Generated : " HorizontalAlignment="right" VerticalAlignment="Top"/>
+		                <Label x:Name="lblCommonAvailable" Content="Common Shares Available : " HorizontalAlignment="right" VerticalAlignment="Top"/>
+		                <Label x:Name="lblPreferredAvailable" Content="Preferred Shares Available : " HorizontalAlignment="right" VerticalAlignment="Top"/>
+                    </StackPanel>
+	                <StackPanel Grid.Column ="1" Margin="0,75,25,0">
+		                <TextBox x:Name="txtCommonSold" TextWrapping="Wrap" HorizontalAlignment="left" Width="200" IsEnabled="False"/>
+                        <TextBox x:Name="txtPreferredSold" TextWrapping="Wrap" HorizontalAlignment="left" Margin="0,8,0,0" Width="200" IsEnabled="False"/>
+                        <TextBox x:Name="txtRevenue" TextWrapping="Wrap" HorizontalAlignment="left" Margin="0,8,0,0" Width="200" IsEnabled="False"/>
+                        <TextBox x:Name="txtCommonAvailable" TextWrapping="Wrap" HorizontalAlignment="left" Margin="0,8,0,0" Width="200" IsEnabled="False"/>
+                        <TextBox x:Name="txtPreferredAvailable" TextWrapping="Wrap" HorizontalAlignment="left" Margin="0,8,0,0" Width="200" IsEnabled="False"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+		    <TabItem x:Name="tabViewEntries" Header="View Entries">
+			    <Grid>
+				    <!-- generate a stackpanel-->
+				    <StackPanel x:Name="spOutput" Grid.Column ="1"  Margin="50,20,50,10">
+					    <!-- Datagrid for sql table output -->
+					    <DataGrid x:Name="dtgOutputDisplay"/>
+				    </StackPanel>
+			    </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
