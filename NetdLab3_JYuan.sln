@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetdLab3_JYuan", "NetdLab3_JYuan\NetdLab3_JYuan.csproj", "{B9DA6143-440D-48D3-AD4F-4C2E01712C0A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B9DA6143-440D-48D3-AD4F-4C2E01712C0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9DA6143-440D-48D3-AD4F-4C2E01712C0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9DA6143-440D-48D3-AD4F-4C2E01712C0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9DA6143-440D-48D3-AD4F-4C2E01712C0A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6B7BF72A-64C6-4A95-95FC-95AC169CCD6F}
+	EndGlobalSection
+EndGlobal
