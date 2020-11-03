@@ -20,6 +20,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data;
 using System.Data.SqlClient;
+using Microsoft.Win32;
 
 namespace NetdLab3_JYuan
 {
@@ -53,6 +54,7 @@ namespace NetdLab3_JYuan
                 sda.Fill(dt);
                 //Bind datatable to the sql table
                 dtgOutputDisplay.ItemsSource = dt.DefaultView;
+                cn.Close();
             }
             catch (Exception ex)
             {
@@ -76,27 +78,76 @@ namespace NetdLab3_JYuan
                 //This is the SQL query we want to run.
                 string selectionQuery = "SELECT * FROM shares";
                 SqlCommand command = new SqlCommand(selectionQuery, cn);
+                //read and outputs the available common and preferred shares
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     reader.Read();
                     txtCommonAvailable.Text = reader.GetInt32(0).ToString();
                     txtPreferredAvailable.Text = reader.GetInt32(1).ToString();
                 }
+                //sql command to sum the common shares
                 selectionQuery = "SELECT SUM(shares) FROM entries WHERE shareType= \'Common\'";
                 command = new SqlCommand(selectionQuery, cn);
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     reader.Read();
-                    txtCommonSold.Text = reader.GetInt32(0).ToString();
+                    //checks to see if the amount is empty and if not then outputs the common shares sold. Else the common shares sold is 0.
+                    if (!reader.IsDBNull(0))
+                    {
+                        txtCommonSold.Text = reader.GetInt32(0).ToString();
+                    }
+                    else
+                    {
+                        txtCommonSold.Text = "0";
+                    }
                 }
+                //sql command to sum the preferred shares
                 selectionQuery = "SELECT SUM(shares) FROM entries WHERE shareType= \'Preferred\'";
                 command = new SqlCommand(selectionQuery, cn);
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     reader.Read();
-                    txtPreferredSold.Text = reader.GetInt32(0).ToString();
+                    //checks to see if the amount is empty and if not then outputs the preferred shares sold. Else the preferred shares sold is 0.
+                    if (!reader.IsDBNull(0))
+                    {
+                        txtPreferredSold.Text = reader.GetInt32(0).ToString();
+                    }
+                    else
+                    {
+                        txtPreferredSold.Text = "0";
+                    }
                 }
-
+                int sumTotal = 0;
+                int id = 0;
+                //creates query statement to get necessary fields
+                selectionQuery = "SELECT shares, datePurchased, shareType FROM entries";
+                command = new SqlCommand(selectionQuery, cn);
+                SqlDataAdapter sda = new SqlDataAdapter(command);
+                //places the data into a datatable
+                DataTable dt = new DataTable("revenueCalculation");
+                sda.Fill(dt);
+                //iterates through the data table's rows
+                foreach(DataRow row in dt.Rows)
+                {
+                    //creates datatime variable using the datePurchased field to see the RNG
+                    DateTime purchaseDate = DateTime.Parse(row["datePurchased"].ToString());
+                    int day = Convert.ToInt32((purchaseDate - new DateTime(1990, 1, 1)).TotalDays);
+                    Random rnd = new Random(day);
+                    //checks if the current iteration is a common or preferred share and adjusts the range according
+                    if (row["shareType"].ToString() == "Common")
+                    {
+                        id = rnd.Next(1, 180);
+                    }
+                    else 
+                    {
+                        id = rnd.Next(20, 200);
+                    }
+                    //adds the value of the share to the sum total
+                    sumTotal += int.Parse(row["shares"].ToString())*id;
+                }
+                //Outputs the total into revenue
+                txtRevenue.Text = sumTotal.ToString();
+                cn.Close();
             }
             catch (Exception ex)
             {
@@ -167,7 +218,9 @@ namespace NetdLab3_JYuan
                                     txtBuyerName.Text = " ";
                                     txtShareNo.Text = " ";
                                     dtpDatePicker.SelectedDate = null;
-
+                                    //updates the summary and data grid pages
+                                    FillDataGrid();
+                                    FillSummary();
 
                                 }
                                 //not enough for the desired amount of shares
@@ -205,6 +258,9 @@ namespace NetdLab3_JYuan
                                     dtpDatePicker.SelectedDate = null;
                                     radCommon.IsChecked = true;
                                     radPreferred.IsChecked = false;
+                                    //updates the summary and data grid pages
+                                    FillDataGrid();
+                                    FillSummary();
                                 }
                                 //not enough for the desired amount of shares
                                 else
