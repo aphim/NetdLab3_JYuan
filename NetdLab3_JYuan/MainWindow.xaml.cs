@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,12 +30,49 @@ namespace NetdLab3_JYuan
     /// </summary>
     public partial class MainWindow : Window
     {
+        //create a new list of share objects
+        ObservableCollection<Shares> list = new ObservableCollection<Shares>();
+
         public MainWindow()
         {
             InitializeComponent();
             FillDataGrid();
             FillSummary();
+            FillList();
+            lstShares.ItemsSource = list;
         }
+        /// <summary>
+        /// Function that goes through the database and outputs it into the list.
+        /// </summary>
+        private void FillList()
+        {
+            //connect to data source
+            string connectString = Properties.Settings.Default.connect_string;
+            SqlConnection cn = new SqlConnection(connectString);
+            cn.Open();
+            //Obtain properties from the database
+            string selectionQuery = "SELECT buyerName, shares, datePurchased, shareType FROM entries";
+            SqlCommand command = new SqlCommand(selectionQuery, cn);
+            SqlDataAdapter sda = new SqlDataAdapter(command);
+            DataTable dt = new DataTable("fillList");
+            sda.Fill(dt);
+            //iterates through the data table's rows
+            foreach (DataRow row in dt.Rows)
+            {
+                //checks the type of the share for current iteration
+                if (row["shareType"].ToString() == "Common")
+                {
+                    //creates a common share object
+                    list.Add(new CommonShare(row["buyerName"].ToString(), row["datePurchased"].ToString(), Convert.ToInt32(row["shares"])));
+                }
+                else
+                {
+                    //creates a preferred share object
+                    list.Add(new PreferredShare(row["buyerName"].ToString(), row["datePurchased"].ToString(), Convert.ToInt32(row["shares"])));
+                }
+            }
+        }
+
         /// <summary>
         /// Function used for filling the data grid for view entries
         /// </summary>
@@ -133,14 +171,17 @@ namespace NetdLab3_JYuan
                     DateTime purchaseDate = DateTime.Parse(row["datePurchased"].ToString());
                     int day = Convert.ToInt32((purchaseDate - new DateTime(1990, 1, 1)).TotalDays);
                     Random rnd = new Random(day);
-                    //checks if the current iteration is a common or preferred share and adjusts the range according
+                    //checks if the current iteration is a common or preferred share and adjusts the range according. *Modified so prices are constant as per communication activity.
                     if (row["shareType"].ToString() == "Common")
                     {
-                        id = rnd.Next(1, 180);
+              
+                        //id = rnd.Next(1, 180);
+                        id = 42;
                     }
                     else 
                     {
-                        id = rnd.Next(20, 200);
+                        //id = rnd.Next(20, 200);
+                        id = 100;
                     }
                     //adds the value of the share to the sum total
                     sumTotal += int.Parse(row["shares"].ToString())*id;
@@ -157,14 +198,16 @@ namespace NetdLab3_JYuan
 
         }
 
-            /// <summary>
-            /// Event handler for button press of create entry
-            /// </summary>
-            /// <param name="sender"></param>
-            /// <param name="e"></param>
-            private void btnCreateEntry_Click(object sender, RoutedEventArgs e)
+
+
+        /// <summary>
+        /// Event handler for button press of create entry
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnCreateEntry_Click(object sender, RoutedEventArgs e)
         {
-            int numberofCommons;
+            int numberofCommons; 
             int numberofPreferred;
             //connect to the database
             string connectString = Properties.Settings.Default.connect_string;
@@ -212,6 +255,8 @@ namespace NetdLab3_JYuan
                                     command = new SqlCommand(insertQuery, cn);
                                     command.ExecuteNonQuery();
                                     cn.Close();
+                                    //adds the new project object into the list
+                                    list.Add(new CommonShare(txtBuyerName.Text, dtpDatePicker.Text, tempint));
                                     //Messagebox for a successful input
                                     MessageBox.Show("The entry has been submitted");
                                     //resets the form
@@ -250,6 +295,8 @@ namespace NetdLab3_JYuan
                                     command = new SqlCommand(insertQuery, cn);
                                     command.ExecuteNonQuery();
                                     cn.Close();
+                                    //adds the new project object into the list
+                                    list.Add(new PreferredShare(txtBuyerName.Text, dtpDatePicker.Text, tempint));
                                     //Messagebox for a successful input
                                     MessageBox.Show("The entry has been submitted");
                                     //resets the form

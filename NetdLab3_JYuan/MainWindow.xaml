@@ -1,8 +1,8 @@
 ﻿<!-- Project Name: Net3202_Lab3 -->
 <!-- Author: Jacky Yuan -->
-<!-- Date: Nov 2, 2020 -->
+<!-- Date: Nov 9, 2020 -->
 <!-- Description: Makes a database software program for purchasing shares. -->
-<!-- Change log: N/A -->
+<!-- Change log: Added view objects tab that displays the shares objects -->
 
     <Window x:Class="NetdLab3_JYuan.MainWindow"
             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -11,7 +11,7 @@
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             xmlns:local="clr-namespace:NetdLab3_JYuan"
             mc:Ignorable="d"
-            Title="Navigate the World" Height="350" Width="500">
+            Title="Navigate the World" Height="350" Width="550">
     <Grid>
 	    <TabControl>
             <TabItem x:Name="tabCreateEntry" Header="Create Entry">
@@ -77,6 +77,25 @@
 				    </StackPanel>
 			    </Grid>
             </TabItem>
+		    <TabItem x:Name="tabViewObjects" Header="View Objects">
+			    <Grid>
+				    <!-- generate a stackpanel-->
+				    <StackPanel x:Name="spOutput2" Grid.Column ="1" Margin="10">
+                        <ListView x:Name="lstShares" Height ="300" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="False">
+                            <ListView.View>
+                                <GridView x:Name="shareGridView" >
+                                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding BuyerName, Mode=Default}"/>
+                                    <GridViewColumn Header="Number of Shares" DisplayMemberBinding="{Binding ShareNumber, Mode=Default}"/>
+                                    <GridViewColumn Header="Date Purchased" DisplayMemberBinding="{Binding PurchasedDate, Mode=Default}"/>
+                                    <GridViewColumn Header="Share Type" DisplayMemberBinding="{Binding ShareType, Mode=Default}"/>
+                                    <GridViewColumn Header="Share Price" DisplayMemberBinding="{Binding SharePrice, Mode=Default}"/>
+                                    <GridViewColumn Header="Voting Power" DisplayMemberBinding="{Binding VotePower, Mode=Default}"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView> 
+                    </StackPanel>
+			    </Grid>
+		    </TabItem>
         </TabControl>
     </Grid>
 </Window>
